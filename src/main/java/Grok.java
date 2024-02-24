@@ -13,7 +13,7 @@ public class Grok
 
     // instance variables
     private int powerLevel;
-    private boolean isAlive;
+    private boolean isAlive = true;
 
     /*
      * Initializes a Grok object to the default power level of 50.
@@ -23,6 +23,7 @@ public class Grok
         setPowerLevel(DEFAULT_POWER_LEVEL);
     }
 
+
     /*
      * Initializes a Grok object to power powerLevel
      *
@@ -30,7 +31,11 @@ public class Grok
      */
     public Grok(int powerLevel)
     {
+        if(powerLevel > MAX_POWER_LEVEL){
+            powerLevel = MAX_POWER_LEVEL;
+        }
         setPowerLevel(powerLevel);
+        isDead();
     }
 
     // accessor methods
@@ -44,10 +49,18 @@ public class Grok
         return powerLevel;
     }
 
-    public boolean isDead()
-    {
+    public boolean isDead() {
         // TODO: replace this line with your code here
+        isAlive = true;
+        if (this.powerLevel <= 0) {
+            this.powerLevel = 0;
+            isAlive = false;
+            return true;
+        }else{
+            return false;
+        }
     }
+
 
     // mutator methods
 
@@ -57,8 +70,15 @@ public class Grok
      */
     public void setPowerLevel(int powerLevel)
     {
-        this.powerLevel = powerLevel;
-    }
+        if (isAlive) {
+            this.powerLevel = powerLevel;
+        }
+        else{
+            this.powerLevel = 0;
+        }
+        }
+
+
 
     /*
      * Set the power level of this Grok to the power level of
@@ -66,9 +86,15 @@ public class Grok
      * @param pill The PowerPill that the this Grok.  The power
      * of the pill is added to the power level of this Grok.
      */
-    public void takePowerPill(PowerPill pill)
-    {
-        setPowerLevel(powerLevel + pill.getPower());
+    public void takePowerPill(PowerPill pill) {
+        if (!isAlive) {
+            powerLevel = 0;
+        } else {
+            setPowerLevel(powerLevel + pill.getPower());
+            if (powerLevel > MAX_POWER_LEVEL) {
+                powerLevel = MAX_POWER_LEVEL;
+            }
+        }
     }
 
     /*
@@ -78,6 +104,7 @@ public class Grok
     public void tookHit()
     {
         setPowerLevel(powerLevel - 5);
+        isDead();
     }
 
     //================== Do Not Touch Code Below this line =============================
